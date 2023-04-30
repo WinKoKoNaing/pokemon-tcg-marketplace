@@ -95,8 +95,8 @@ export default function Cart({ navigation }: CartScreenProps) {
     navigation.replace(PAYMENT_SUCCESS);
   };
   return (
-    <SafeAreaView className="flex-1 justify-center">
-      <View className="bg-white h-[613px] mt-28">
+    <SafeAreaView className="flex-1 justify-end">
+      <View className="bg-white h-[613px] mb-20">
         <View className="flex-1 relative">
           <FlatList
             data={cardList}

@@ -8,8 +8,10 @@ import {
 } from "@expo-google-fonts/poppins";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { AppStatusBar } from "components";
 import { AppProvider } from "context/Context";
 import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
 import SwrConfig from "lib/SwrConfig";
 import { useCallback } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -41,6 +43,7 @@ export default function App() {
   return (
     <AppProvider>
       <SwrConfig>
+        <AppStatusBar />
         <SafeAreaProvider onLayout={onLayoutRootView}>
           <NavigationContainer>
             <RootStack.Navigator

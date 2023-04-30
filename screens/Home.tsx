@@ -152,6 +152,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
           >
             <TextInput
               textAlign="center"
+              placeholderTextColor="gray"
               placeholder="Name"
               value={filter?.["name"]}
               onChangeText={handleChangeName}

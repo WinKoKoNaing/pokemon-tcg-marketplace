@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const fontFamily = require("./styles/fonts");
+
 module.exports = {
   content: [
     "./App.{js,jsx,ts,tsx}",
@@ -8,7 +10,12 @@ module.exports = {
     "./screens/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily,
+      colors: {
+        black: "#1D1C1C",
+      },
+    },
   },
   plugins: [],
 };

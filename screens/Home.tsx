@@ -2,6 +2,7 @@ import { Cart } from "assets/svgs";
 import { Header } from "components";
 import Select, { DataType } from "components/ui/Select";
 import { FilterType, useAppState } from "context/Context";
+import { BlurView } from "expo-blur";
 import { useDebounce } from "hooks";
 import React, { useMemo, useState } from "react";
 import {
@@ -16,7 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRarities, useSets, useTypes } from "services";
 import useSWRInfinite from "swr/infinite";
 import { Card } from "type";
-import { CART, HomeScreenProps } from "types";
+import { CART, HomeScreenProps } from "type/Router";
 
 const limit = 12;
 export default function HomeScreen({ navigation }: HomeScreenProps) {
@@ -202,23 +203,29 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
         />
       </View>
 
-      <View className="w-full h-[120px] items-center justify-center z-50 absolute bg-gray-300 bottom-0">
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate(CART);
-          }}
-          className="bg-[#298BFD] py-[6px] px-[14px] rounded-[10px] flex-row"
-          style={{ gap: 8 }}
+      {cardList.length > 0 && (
+        <BlurView
+          tint="light"
+          intensity={100}
+          className="w-full h-[120px] items-center justify-center z-50 absolute bg-gray-300 bottom-0"
         >
-          <Cart />
-          <Text className="font-Poppins500 text-white">View cart</Text>
-          {cardList.length > 0 && (
-            <View className="bg-[#FF6363] absolute -top-2 rounded-full -left-2 h-4 w-4 items-center justify-center">
-              <Text className="text-xs">{cardList.length}</Text>
-            </View>
-          )}
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate(CART);
+            }}
+            className="bg-[#298BFD] py-[6px] px-[14px] rounded-[10px] flex-row"
+            style={{ gap: 8 }}
+          >
+            <Cart />
+            <Text className="font-Poppins500 text-white">View cart</Text>
+            {cardList.length > 0 && (
+              <View className="bg-[#FF6363] absolute -top-2 rounded-full -left-2 px-1 items-center justify-center">
+                <Text className="text-xs">{cardList.length}</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        </BlurView>
+      )}
     </SafeAreaView>
   );
 }

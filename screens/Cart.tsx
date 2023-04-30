@@ -1,9 +1,12 @@
 import { AntDesign } from "@expo/vector-icons";
 import { useAppState } from "context/Context";
+import { BlurView } from "expo-blur";
+import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Card } from "type";
-import { CartScreenProps } from "types";
+import { CartScreenProps, PAYMENT_SUCCESS } from "type/Router";
 
 export default function Cart({ navigation }: CartScreenProps) {
   const { cardList } = useAppState();
@@ -87,10 +90,14 @@ export default function Cart({ navigation }: CartScreenProps) {
   const onPressClose = () => {
     navigation.goBack();
   };
+  const onPressPay = () => {
+    removeAllCard();
+    navigation.replace(PAYMENT_SUCCESS);
+  };
   return (
-    <View className="flex-1 justify-center">
+    <SafeAreaView className="flex-1 justify-center">
       <View className="bg-white h-[613px] mt-28">
-        <View className="flex-1">
+        <View className="flex-1 relative">
           <FlatList
             data={cardList}
             renderItem={renderItem}
@@ -99,10 +106,19 @@ export default function Cart({ navigation }: CartScreenProps) {
                 <Text className="text-center">There is no card.</Text>
               </View>
             }
-            contentContainerStyle={{ paddingHorizontal: 40 }}
+            contentContainerStyle={{
+              paddingHorizontal: 40,
+              paddingBottom: 100,
+            }}
             keyExtractor={(item, index) => index.toString()}
           />
+          <BlurView
+            tint="light"
+            intensity={70}
+            className="w-full absolute bottom-0 h-[58px]"
+          ></BlurView>
         </View>
+
         <View className="items-center w-[217.23px] self-center">
           <TouchableOpacity onPress={onPressClearAll}>
             <Text className="text-[#6A6969] font-Poppins400 text-xs">
@@ -132,9 +148,7 @@ export default function Cart({ navigation }: CartScreenProps) {
 
           <TouchableOpacity
             disabled={cardList.length === 0}
-            onPress={() => {
-              //   navigation.navigate(CART);
-            }}
+            onPress={onPressPay}
             className="bg-[#298BFD] items-center w-full justify-center px-[14px] h-[47px] rounded-[25px] flex-row my-8"
           >
             <Text className="font-Poppins500 text-white">Pay now</Text>
@@ -147,6 +161,6 @@ export default function Cart({ navigation }: CartScreenProps) {
           <AntDesign name="close" size={16} color="white" />
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

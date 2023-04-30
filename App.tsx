@@ -1,20 +1,20 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import * as SplashScreen from "expo-splash-screen";
-import { useCallback } from "react";
-import { CartScreen, HomeScreen, LoginScreen } from "screens";
-import { CART, HOME, LOGIN, RootStackParamList } from "types";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import {
-  useFonts,
   Poppins_300Light,
   Poppins_400Regular,
   Poppins_500Medium,
   Poppins_600SemiBold,
   Poppins_700Bold,
+  useFonts,
 } from "@expo-google-fonts/poppins";
-import SwrConfig from "lib/SwrConfig";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { AppProvider } from "context/Context";
+import * as SplashScreen from "expo-splash-screen";
+import SwrConfig from "lib/SwrConfig";
+import { useCallback } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { CartScreen, HomeScreen, PaymentSuccessScreen } from "screens";
+import { CART, HOME, PAYMENT_SUCCESS, RootStackParamList } from "type/Router";
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
@@ -54,6 +54,10 @@ export default function App() {
                 screenOptions={{ presentation: "containedTransparentModal" }}
               >
                 <RootStack.Screen name={CART} component={CartScreen} />
+                <RootStack.Screen
+                  name={PAYMENT_SUCCESS}
+                  component={PaymentSuccessScreen}
+                />
               </RootStack.Group>
             </RootStack.Navigator>
           </NavigationContainer>

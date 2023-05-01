@@ -9,14 +9,24 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { AppStatusBar } from "components";
-import { AppProvider } from "context/Context";
+import { AppProvider, useAppState } from "context/Context";
 import * as SplashScreen from "expo-splash-screen";
-import { StatusBar } from "expo-status-bar";
 import SwrConfig from "lib/SwrConfig";
 import { useCallback } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { CartScreen, HomeScreen, PaymentSuccessScreen } from "screens";
-import { CART, HOME, PAYMENT_SUCCESS, RootStackParamList } from "type/Router";
+import {
+  CartScreen,
+  HomeScreen,
+  LoginScreen,
+  PaymentSuccessScreen,
+} from "screens";
+import {
+  CART,
+  HOME,
+  LOGIN,
+  PAYMENT_SUCCESS,
+  RootStackParamList,
+} from "type/Router";
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
@@ -40,29 +50,39 @@ export default function App() {
     return null;
   }
 
+  const MainStack = () => {
+    const { token } = useAppState();
+    return (
+      <RootStack.Navigator screenOptions={{ headerShown: false }}>
+        {!token ? (
+          <RootStack.Screen name={LOGIN} component={LoginScreen} />
+        ) : (
+          <>
+            <RootStack.Screen name={HOME} component={HomeScreen} />
+
+            <RootStack.Group
+              screenOptions={{
+                presentation: "containedTransparentModal",
+              }}
+            >
+              <RootStack.Screen name={CART} component={CartScreen} />
+              <RootStack.Screen
+                name={PAYMENT_SUCCESS}
+                component={PaymentSuccessScreen}
+              />
+            </RootStack.Group>
+          </>
+        )}
+      </RootStack.Navigator>
+    );
+  };
   return (
     <AppProvider>
       <SwrConfig>
         <AppStatusBar />
         <SafeAreaProvider onLayout={onLayoutRootView}>
           <NavigationContainer>
-            <RootStack.Navigator
-              initialRouteName={HOME}
-              screenOptions={{ headerShown: false }}
-            >
-              {/* <Stack.Screen name={LOGIN} component={LoginScreen} /> */}
-              <RootStack.Screen name={HOME} component={HomeScreen} />
-
-              <RootStack.Group
-                screenOptions={{ presentation: "containedTransparentModal" }}
-              >
-                <RootStack.Screen name={CART} component={CartScreen} />
-                <RootStack.Screen
-                  name={PAYMENT_SUCCESS}
-                  component={PaymentSuccessScreen}
-                />
-              </RootStack.Group>
-            </RootStack.Navigator>
+            <MainStack />
           </NavigationContainer>
         </SafeAreaProvider>
       </SwrConfig>

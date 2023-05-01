@@ -22,16 +22,19 @@ export type FilterType = {
 interface AppContextInterface {
   isLoading?: boolean;
   token?: string | null;
+  username?: string;
   // filter?: FilterType;
   cardList?: Card[];
   addCard?: (card: Card) => void;
   removeAllCard?: () => void;
   updateQty?: (id: string, qty: number) => void;
   removeACard?: (id: string) => void;
+  login?: (data: AppContextInterface) => void;
 }
 
 const initialState = {
   isLoading: false,
+  username: null,
   token: null,
   filter: {
     name: null,
@@ -48,7 +51,7 @@ type Action =
     }
   | {
       type: "RESTORE_TOKEN";
-      payload: string;
+      payload: AppContextInterface;
     }
   // | {
   //     type: "FILTER";
@@ -76,36 +79,24 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
-      let userToken: string;
-
+      let payload: string;
       try {
-        userToken = await SecureStore.getItemAsync(SECURE_KEY);
+        payload = await SecureStore.getItemAsync(SECURE_KEY);
       } catch (e) {
         // Restoring token failed
       }
-
-      // After restoring token, we may need to validate it in production apps
-
-      // This will switch to the App screen or Auth screen and this loading
-      // screen will be unmounted and thrown away.
-      dispatch({ type: "RESTORE_TOKEN", payload: userToken });
+      dispatch({ type: "RESTORE_TOKEN", payload: JSON.parse(payload) });
     };
 
     bootstrapAsync();
   }, []);
 
   const login = useCallback(async (payload: AppContextInterface) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        await SecureStore.setItemAsync(SECURE_KEY, JSON.stringify(payload));
-        dispatch({ type: "LOGIN", payload });
-        resolve("Successfully signup.");
-      } catch (e) {
-        reject("fail to sign in.");
-      }
-    });
+    try {
+      await SecureStore.setItemAsync(SECURE_KEY, JSON.stringify(payload));
+      dispatch({ type: "LOGIN", payload });
+    } catch (e) {}
   }, []);
 
   // const applyFilterListing = useCallback(async (filter: FilterType) => {
@@ -155,7 +146,7 @@ const reducer = (state: AppContextInterface, action: Action) => {
     case "RESTORE_TOKEN":
       return {
         ...state,
-        token: action.payload,
+        ...action.payload,
         isLoading: false,
       };
     case "LOGIN":

@@ -1,3 +1,4 @@
+import { Entypo } from "@expo/vector-icons";
 import { Cart } from "assets/svgs";
 import { Header } from "components";
 import Select, { DataType } from "components/ui/Select";
@@ -19,21 +20,22 @@ import useSWRInfinite from "swr/infinite";
 import { Card } from "type";
 import { CART, HomeScreenProps } from "type/Router";
 
+const initialFilter = {
+  name: "",
+  rarity: {
+    label: "",
+  },
+  set: {
+    label: "",
+  },
+  type: {
+    label: "",
+  },
+};
 const limit = 12;
 export default function HomeScreen({ navigation }: HomeScreenProps) {
   const { cardList, addCard } = useAppState();
-  const [filter, setFilter] = useState<FilterType>({
-    name: "",
-    rarity: {
-      label: "",
-    },
-    set: {
-      label: "",
-    },
-    type: {
-      label: "",
-    },
-  });
+  const [filter, setFilter] = useState<FilterType>(initialFilter);
 
   const updateFilter = (item: DataType | string, key: string) =>
     setFilter((f) => ({ ...f, [key]: item }));
@@ -90,6 +92,10 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
     return () => {
       addCard(item);
     };
+  };
+
+  const onPressClearFilter = () => {
+    setFilter(initialFilter);
   };
 
   const renderItem = ({ item, index }: { item: Card; index: number }) => (
@@ -181,6 +187,19 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
               role="set"
             />
           </View>
+
+          {filter.name ||
+            filter.set.label ||
+            filter.rarity.label ||
+            (filter.type.label && (
+              <TouchableOpacity
+                onPress={onPressClearFilter}
+                className="flex-row items-center mb-2"
+              >
+                <Entypo name="cross" size={24} color="red" />
+                <Text>Clear Filter</Text>
+              </TouchableOpacity>
+            ))}
         </View>
 
         <FlatList

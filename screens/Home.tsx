@@ -188,18 +188,18 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
             />
           </View>
 
-          {filter.name ||
-            filter.set.label ||
-            filter.rarity.label ||
-            (filter.type.label && (
-              <TouchableOpacity
-                onPress={onPressClearFilter}
-                className="flex-row items-center mb-2"
-              >
-                <Entypo name="cross" size={24} color="red" />
-                <Text>Clear Filter</Text>
-              </TouchableOpacity>
-            ))}
+          {(Boolean(filter?.name) ||
+            Boolean(filter?.set?.label) ||
+            Boolean(filter?.rarity?.label) ||
+            Boolean(filter?.type?.label)) && (
+            <TouchableOpacity
+              onPress={onPressClearFilter}
+              className="flex-row items-center mb-2"
+            >
+              <Entypo name="cross" size={24} color="red" />
+              <Text>Clear Filter</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         <FlatList

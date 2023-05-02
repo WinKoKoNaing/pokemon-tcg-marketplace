@@ -7,6 +7,6 @@
 # how to build using EAS service
   <code> eas login </code>
   ## IOS
-  <code> eas build --platform android --local </code>  
-  ## Android
   <code> eas build --platform ios --local </code>  
+  ## Android
+  <code> eas build --platform android --local </code>  
